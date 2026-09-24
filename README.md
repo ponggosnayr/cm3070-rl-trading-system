@@ -55,4 +55,6 @@ Check the frontend from the frontend directory:
 - data/: historical market data
 - tests/: automated tests
 
-The docs/ directory holds supporting report material. It is not needed to launch the app. Results shown by the dashboard are research simulations, not investment advice.
+- FINAL_PROJECT_REPORT.pdf: project dissertation report
+
+Results shown by the dashboard are research simulations, not investment advice.
