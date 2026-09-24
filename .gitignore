@@ -59,3 +59,22 @@ tests/*.log
 frontend/src/*.backup.*
 run_tensorboard.bat
 docs/
+
+# Redundant root helper scripts and experimental files
+START.bat
+Launch_Train_GUI.bat
+Run_Tests.bat
+Verify_Submission.bat
+train_gui.py
+package_submission.py
+src/experiments/
+src/controlled_ppo_trial.py
+src/ppo_learning_diagnostic.py
+src/run_gradual_drawdown_ablation.py
+src/run_multi_regime_experiment.py
+src/run_experiments.py
+src/benchmark_baselines.py
+src/evaluate_comparison.py
+src/update_datasets.py
+src/test_env.py
+src/experiment_runner.py
