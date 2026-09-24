@@ -38,3 +38,16 @@ docs/rubrics/
 *.lot
 *.out
 *.toc
+
+# Presentation and recording aids
+docs/presentation_slides/
+docs/recording_snapshots/
+docs/teleprompter.html
+
+# Unused draft images
+docs/images/feature_importance.png
+docs/images/fig_dashboard_strategy_lab.png
+docs/images/fig_factor_telemetry.png
+docs/images/fig_shap_wfv.png
+docs/images/fig_strategy_lab_advanced.png
+docs/images/value_loss_convergence.png

@@ -23,7 +23,9 @@ EXCLUDE_DIRS = {
     "tmp",
     "scratch",
     "archive",
-    "tensorboard_logs"
+    "tensorboard_logs",
+    "presentation_slides",
+    "recording_snapshots"
 }
 
 EXCLUDE_EXTENSIONS = {
@@ -44,6 +46,7 @@ EXCLUDE_FILES = {
     "draftdraft.pdf",
     "draftreport.pdf",
     "texput.log",
+    "teleprompter.html",
     # Exclude backup and redundant model weights (keep active persistent_brain.pth and normalizer)
     "persistent_brain.pth.bak",
     "persistent_brain_final.pth",
@@ -53,7 +56,14 @@ EXCLUDE_FILES = {
     # Exclude draft / historical PDFs in docs to keep archive clean (FINAL_PROJECT_REPORT.pdf is preserved)
     "DRAFT_FINAL_PROJECT_REPORT.pdf",
     "DRAFT_FINAL_PROJECT_REPORT_V2.pdf",
-    "PRELIMINARY_PROJECT_REPORT.pdf"
+    "PRELIMINARY_PROJECT_REPORT.pdf",
+    # Unused draft images
+    "feature_importance.png",
+    "fig_dashboard_strategy_lab.png",
+    "fig_factor_telemetry.png",
+    "fig_shap_wfv.png",
+    "fig_strategy_lab_advanced.png",
+    "value_loss_convergence.png"
 }
 
 def should_exclude(rel_path: Path) -> bool:
