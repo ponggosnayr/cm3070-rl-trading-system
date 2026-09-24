@@ -51,3 +51,11 @@ docs/images/fig_factor_telemetry.png
 docs/images/fig_shap_wfv.png
 docs/images/fig_strategy_lab_advanced.png
 docs/images/value_loss_convergence.png
+
+# Internal experiment diagnostics, backup datasets, and docs
+models/experiments/
+data/backup_frozen_benchmark/
+tests/*.log
+frontend/src/*.backup.*
+run_tensorboard.bat
+docs/
