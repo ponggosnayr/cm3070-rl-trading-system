@@ -25,3 +25,16 @@ docs/PROJECT_REVIEW_2026-09-13.md
 docs/PRELIMINARY_PROJECT_REPORT.*
 docs/PRELIMINARY_VIDEO_DEMONSTRATION_SCRIPT.md
 docs/rubrics/
+/docs/*.md
+/docs/**/*.md
+/frontend/README.md
+
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.toc

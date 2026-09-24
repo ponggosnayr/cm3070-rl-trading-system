@@ -180,7 +180,7 @@ Historical performance may reflect market-specific conditions, model selection a
 \newpage
 
 \subsection{Project Planning and Progress Review}
-The saved plan scheduled data and web architecture for May--June, model integration for June--July, evaluation for July--August, and final reporting and submission for September. Evaluation continued into report writing because Cash-only policies and incomplete explanation coverage required further diagnostics. Multi-seed performance, complete action coverage and independent user testing remain future work. In retrospect, the plan needed a larger validation buffer and earlier retention of dataset, checkpoint and runtime manifests. The roadmap, calendar and dated September diagnostic records document this change (\path{docs/PROJECT_PLAN.md}; \path{docs/PROJECT_CALENDAR.md}).
+The saved plan scheduled data and web architecture for May--June, model integration for June--July, evaluation for July--August, and final reporting and submission for September. Evaluation continued into report writing because Cash-only policies and incomplete explanation coverage required further diagnostics. Multi-seed performance, complete action coverage and independent user testing remain future work. In retrospect, the plan needed a larger validation buffer and earlier retention of dataset, checkpoint and runtime manifests.
 
 \newpage
 
@@ -770,7 +770,7 @@ The diagnostic mean hourly drift was 0.018\%, versus 0.30\% round-trip friction.
 
 \subsection{Explainability \& Action-Consistency Evaluation}
 \label{sec:xai_eval}
-The multi-action audit in \texttt{src/xai\_audit.py} supplied randomly generated attribution-like arrays to the explanation engine: 50 samples each for Cash, Long and Short. It measured whether generated text preserved the injected top-three feature order, finding mean Spearman $\rho=0.9991$ and no missing features. This is a software check of ordering logic, not evidence that model-derived SHAP explanations are faithful across all three actions (details: \path{docs/XAI_EXPANDED_EVALUATION_2026.md}).
+The multi-action audit in \texttt{src/xai\_audit.py} supplied randomly generated attribution-like arrays to the explanation engine: 50 samples each for Cash, Long and Short. It measured whether generated text preserved the injected top-three feature order, finding mean Spearman $\rho=0.9991$ and no missing features. This is a software check of ordering logic, not evidence that model-derived SHAP explanations are faithful across all three actions.
 
 A separate frozen-checkpoint scan found 192 Long actions and no Cash or Short actions in its selected historical slice. It therefore could not test real-model explanation coverage for the other actions. Walk-forward and developer-validation policies had different action patterns and must not be conflated with this checkpoint. Fifty targeted tests check pipeline and polarity rules; the validator catches defined lexical contradictions, not arbitrary semantic errors.
 
@@ -837,7 +837,7 @@ The walkthrough found three barriers and prompted these interface repairs:
     \item Offline status was subtle; an amber badge and historical-replay labels were added.
 \end{itemize}
 
-A second author-led pass checked the revised task paths. Independent outcomes remain unknown. A future participant protocol and System Usability Scale instrument are specified in \path{docs/USER_EVALUATION_STUDY.md} \cite{brooke1996,sauro2016}.
+A second author-led pass checked the revised task paths. Independent outcomes remain unknown. A future participant study could use a standardized task protocol and the System Usability Scale \cite{brooke1996,sauro2016}.
 
 \subsection{Zero-Shot Cross-Market Generalization}
 I applied a BTC-trained checkpoint to other assets without fine-tuning. Table~\ref{tab:cross_market} preserves the historical results; exact test dates and source-symbol manifests were not retained.
