@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-09-16 21:48:07",
+  "steps": 500000,
+  "seed": 42,
+  "tiny": {
+    "variant": "tiny_transformer",
+    "param_counts": {
+      "total_params": 178180,
+      "feature_extractor_params": 70272,
+      "action_net_params": 387
+    },
+    "train_duration_sec": 448.97,
+    "steps_per_sec": 1113.7,
+    "weight_stats": {
+      "action_net_w_abs_max": 0.05018557235598564,
+      "action_net_w_std": 0.025894546881318092,
+      "action_net_w_mean": 0.0004151933826506138,
+      "action_net_bias": [
+        0.031018242239952087,
+        -0.013882139697670937,
+        -0.02658284641802311
+      ]
+    },
+    "bull_eval": {
+      "window": "Bull (Apr-Oct 2025)",
+      "steps": 5135,
+      "roi_pct": 0.0,
+      "bnh_roi_pct": 32.62,
+      "max_drawdown_pct": 4.33,
+      "trades": 0,
+      "pct_cash": 99.7,
+      "pct_long": 0.3,
+      "pct_short": 0.0
+    },
+    "bear_eval": {
+      "window": "Bear (Nov 2025-May 2026)",
+      "steps": 5087,
+      "roi_pct": 0.0,
+      "bnh_roi_pct": -32.86,
+      "max_drawdown_pct": 4.03,
+      "trades": 0,
+      "pct_cash": 99.6,
+      "pct_long": 0.4,
+      "pct_short": 0.0
+    }
+  },
+  "deep": {
+    "variant": "deep_transformer",
+    "param_counts": {
+      "total_params": 6513028,
+      "feature_extractor_params": 6331392,
+      "action_net_params": 387
+    },
+    "train_duration_sec": 1076.58,
+    "steps_per_sec": 464.4,
+    "weight_stats": {
+      "action_net_w_abs_max": 0.030620137229561806,
+      "action_net_w_std": 0.01940445601940155,
+      "action_net_w_mean": 0.00011285472282906994,
+      "action_net_bias": [
+        0.02750575914978981,
+        -0.01304881926625967,
+        -0.01537558063864708
+      ]
+    },
+    "bull_eval": {
+      "window": "Bull (Apr-Oct 2025)",
+      "steps": 5135,
+      "roi_pct": 0.0,
+      "bnh_roi_pct": 32.62,
+      "max_drawdown_pct": 0.0,
+      "trades": 0,
+      "pct_cash": 100.0,
+      "pct_long": 0.0,
+      "pct_short": 0.0
+    },
+    "bear_eval": {
+      "window": "Bear (Nov 2025-May 2026)",
+      "steps": 5087,
+      "roi_pct": 0.0,
+      "bnh_roi_pct": -32.86,
+      "max_drawdown_pct": 0.0,
+      "trades": 0,
+      "pct_cash": 100.0,
+      "pct_long": 0.0,
+      "pct_short": 0.0
+    }
+  }
+}

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CM3070 Final Project Presentation</title>
+  <style>
+    :root {
+      --paper: #f4f1eb;
+      --slide: #faf8f4;
+      --ink: #1d2828;
+      --muted: #53615e;
+      --rule: #c5cdc7;
+      --accent: #125c58;
+      --caution: #9a4f3f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .viewport {
+      position: relative;
+      width: min(92vw, 1280px);
+      aspect-ratio: 16 / 9;
+      background: var(--slide);
+      box-shadow: 0 8px 38px rgba(24, 33, 30, 0.12);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5.1% 5.8% 4.2%;
+      display: none;
+      flex-direction: column;
+    }
+
+    .slide.active { display: flex; }
+
+    .masthead,
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 20px;
+      color: var(--muted);
+      font-size: clamp(11px, 1.1vw, 15px);
+      letter-spacing: 0.015em;
+    }
+
+    .masthead {
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .slide-footer {
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      margin-top: auto;
+    }
+
+    .main-title {
+      max-width: 980px;
+      margin: auto 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 25px;
+      color: var(--accent);
+      font-size: clamp(12px, 1.35vw, 18px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      font-family: Georgia, Cambria, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: -0.035em;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-size: clamp(42px, 5.3vw, 74px);
+      line-height: 1.06;
+    }
+
+    .project-name {
+      max-width: 800px;
+      margin: 35px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 1.65vw, 23px);
+      line-height: 1.35;
+    }
+
+    .section-title {
+      margin: 44px 0 11px;
+      font-size: clamp(37px, 4.3vw, 59px);
+      line-height: 1.08;
+    }
+
+    .section-intro {
+      max-width: 880px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(16px, 1.55vw, 22px);
+      line-height: 1.4;
+    }
+
+    .design-list {
+      margin: 34px 0 28px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .design-row {
+      display: grid;
+      grid-template-columns: 7% 23% 1fr 18%;
+      gap: 18px;
+      align-items: baseline;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .row-num {
+      color: var(--accent);
+      font-size: clamp(13px, 1.15vw, 17px);
+      font-weight: 700;
+    }
+
+    .design-row h3 {
+      margin: 0;
+      font-size: clamp(17px, 1.8vw, 25px);
+      font-weight: 600;
+    }
+
+    .design-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.35vw, 19px);
+      line-height: 1.35;
+    }
+
+    .row-fact {
+      color: var(--accent);
+      text-align: right;
+      font-size: clamp(14px, 1.45vw, 20px);
+      font-weight: 700;
+    }
+
+    .result-pair {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: end;
+      gap: 34px;
+      margin: 42px 0 25px;
+    }
+
+    .result-pair .label {
+      display: block;
+      margin-bottom: 11px;
+      color: var(--muted);
+      font-size: clamp(14px, 1.45vw, 20px);
+    }
+
+    .result-pair strong {
+      font-family: Georgia, Cambria, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: -0.045em;
+      font-size: clamp(49px, 6.2vw, 86px);
+      line-height: 1;
+    }
+
+    .result-pair .policy strong { color: var(--accent); }
+    .result-pair .versus {
+      color: var(--muted);
+      font-size: clamp(15px, 1.4vw, 19px);
+      padding-bottom: 8px;
+    }
+
+    .result-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      border-top: 1px solid var(--rule);
+      padding-top: 25px;
+    }
+
+    .result-notes h3 {
+      margin: 0 0 8px;
+      font-size: clamp(17px, 1.65vw, 23px);
+      font-weight: 600;
+    }
+
+    .result-notes p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.32vw, 18px);
+      line-height: 1.4;
+    }
+
+    .result-notes .caution { color: var(--caution); }
+
+    .evidence-line {
+      margin: 22px 0 16px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.35vw, 18px);
+      line-height: 1.35;
+    }
+
+    .nav-bar {
+      position: fixed;
+      right: 4vw;
+      bottom: 12px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-bar button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 600 14px Arial, Helvetica, sans-serif;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .nav-bar button:hover,
+    .nav-bar button:focus-visible { color: var(--accent); }
+
+    :fullscreen .viewport {
+      width: 100vw;
+      height: 100vh;
+      box-shadow: none;
+    }
+
+    :fullscreen .nav-bar { display: none; }
+
+    @media (max-width: 760px) {
+      .slide { padding: 4.5%; }
+      .section-title { margin-top: 23px; }
+      .design-list { margin-top: 16px; }
+      .design-row { gap: 8px; padding: 11px 0; }
+      .result-pair { margin: 22px 0 14px; gap: 12px; }
+      .result-notes { gap: 16px; padding-top: 14px; }
+      .evidence-line { margin: 10px 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewport" aria-label="CM3070 final project slides">
+    <section class="slide active" id="slide1" aria-label="Title slide">
+      <div class="masthead">
+        <span>University of London / CM3070</span>
+        <span>Final project demonstration</span>
+      </div>
+      <div class="main-title">
+        <p class="eyebrow">Reinforcement learning · Explainable AI</p>
+        <h1>Trading decisions<br>under real costs.</h1>
+        <p class="project-name">Adaptive Multi-Market Reinforcement Learning Trading System and Financial Advisor Bot</p>
+      </div>
+      <div class="slide-footer">
+        <span>Ryan</span>
+        <span>BSc Computer Science</span>
+      </div>
+    </section>
+
+    <section class="slide" id="slide2" aria-label="System design slide">
+      <div class="masthead">
+        <span>University of London / CM3070</span>
+        <span>System design</span>
+      </div>
+      <h2 class="section-title">A signal needs context.</h2>
+      <p class="section-intro">The agent is built around execution timing, downside risk and explanations a user can inspect.</p>
+      <div class="design-list">
+        <div class="design-row">
+          <span class="row-num">01</span>
+          <h3>Execution</h3>
+          <p>Actions execute at the next candle open, with commission and slippage included.</p>
+          <span class="row-fact">0.30% round trip</span>
+        </div>
+        <div class="design-row">
+          <span class="row-num">02</span>
+          <h3>Risk</h3>
+          <p>The reward penalises drawdown; a three-state HMM classifies market conditions.</p>
+          <span class="row-fact">3 market states</span>
+        </div>
+        <div class="design-row">
+          <span class="row-num">03</span>
+          <h3>Explanation</h3>
+          <p>SHAP identifies decision drivers, then the advisor explains the current action.</p>
+          <span class="row-fact">Feature attributions</span>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Research focus: performance and interpretability</span>
+        <span>Ryan / CM3070</span>
+      </div>
+    </section>
+
+    <section class="slide" id="slide3" aria-label="Results slide">
+      <div class="masthead">
+        <span>University of London / CM3070</span>
+        <span>Evaluation</span>
+      </div>
+      <h2 class="section-title">Downturn gains, uneven results.</h2>
+      <p class="section-intro">Mean out-of-sample return across five walk-forward folds.</p>
+      <div class="result-pair" aria-label="Policy mean return 11.11 percent versus buy and hold mean return 24.67 percent">
+        <div class="policy">
+          <span class="label">Policy</span>
+          <strong>+11.11%</strong>
+        </div>
+        <span class="versus">versus</span>
+        <div>
+          <span class="label">Buy-and-Hold</span>
+          <strong>+24.67%</strong>
+        </div>
+      </div>
+      <div class="result-notes">
+        <div>
+          <h3>Where it helped</h3>
+          <p>Fold 2 returned <strong>+44.51%</strong> during a downturn, against <strong>−20.65%</strong> for the asset.</p>
+        </div>
+        <div>
+          <h3 class="caution">Where it failed</h3>
+          <p>Folds 3 and 4 made <strong>zero trades</strong>, missing strong rising markets. The cause of cash inaction remains unresolved.</p>
+        </div>
+      </div>
+      <p class="evidence-line">Cross-market: gains on ETH and DOGE; losses on equities and commodities. Dated test audit: 240 passed. Author-led heuristic review with AI assistance: eight UI defects resolved.</p>
+      <div class="slide-footer">
+        <span>Source: saved walk-forward and cross-market evaluations</span>
+        <span>Ryan / CM3070</span>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav-bar" aria-label="Slide controls">
+    <button type="button" onclick="prevSlide()" aria-label="Previous slide">← Previous</button>
+    <button type="button" onclick="nextSlide()" aria-label="Next slide">Next →</button>
+    <button type="button" onclick="toggleFullscreen()" aria-label="Toggle fullscreen">Fullscreen</button>
+  </nav>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 3;
+
+    function goToSlide(n) {
+      document.querySelectorAll('.slide').forEach(function (slide) {
+        slide.classList.remove('active');
+      });
+      const target = document.getElementById('slide' + n);
+      if (target) {
+        target.classList.add('active');
+        currentSlide = n;
+      }
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide === totalSlides ? 1 : currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide === 1 ? totalSlides : currentSlide - 1);
+    }
+
+    function toggleFullscreen() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(function () {});
+      } else {
+        document.documentElement.requestFullscreen().catch(function () {});
+      }
+    }
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+        event.preventDefault();
+        nextSlide();
+      } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        prevSlide();
+      } else if (event.key === 'f' || event.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+  </script>
+</body>
+</html>

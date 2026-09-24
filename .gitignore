@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+env/
+logs/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+CM3070_Final_Project_Submission.zip
+FINAL REPORT VIDEO.mp4
+archive/
+coursework_milestones_archive/
+.agents/
+.gemini/
+tensorboard_logs/
+*.bak
+ORIGINAL_REQUEST.md
+docs/GEMINI_IMPLEMENTATION_PLAN.md
+docs/FINAL_SUBMISSION_PLAN_2026-09-22.md
+docs/PROJECT_REVIEW_2026-09-13.md
+docs/PRELIMINARY_PROJECT_REPORT.*
+docs/PRELIMINARY_VIDEO_DEMONSTRATION_SCRIPT.md
+docs/rubrics/

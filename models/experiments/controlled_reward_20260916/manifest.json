@@ -1,0 +1,26 @@
+{
+  "steps": 32768,
+  "seeds": [
+    42,
+    101,
+    777
+  ],
+  "settings": {
+    "commission_rate": 0.001,
+    "slippage_rate": 0.0005,
+    "cooldown_steps": 1,
+    "max_trade_duration": 0,
+    "inactivity_penalty": 0,
+    "negative_pnl_penalty": 0,
+    "drawdown_penalty_coef": 0,
+    "max_drawdown_cap": 0
+  },
+  "score": "mean(window ROI percent + 0.5 * negative max drawdown percent)",
+  "evidence": "Retrospective development only; no sealed test used.",
+  "data_sha256": "3c5e68c09c8e08005588ebd1b6882d1f8a841c4bf788be86619863c9a1fa6a90",
+  "source_sha256": {
+    "rl_env.py": "e5b2d0e4d25b55b918d760c0b1925814741b4bb2bbef660338378a14b8a00fbb",
+    "trading_utils.py": "f8e65ef9a028f44e2d600a15b3b4a1c6ce7306d73709276dc13fc9c19a081abe",
+    "controlled_ppo_trial.py": "550eac0b6a13b1909198c41a1b539451bc93c035b8a9a055e7ec036fb82f2b05"
+  }
+}

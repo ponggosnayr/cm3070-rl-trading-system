@@ -1,0 +1,150 @@
+{
+  "experiment": "curriculum_friction_warmup_diagnostic",
+  "seed": 42,
+  "models": {
+    "direct_full_cost": {
+      "evaluation": {
+        "bull": {
+          "window": "bull",
+          "steps": 5135,
+          "horizon": "full",
+          "roi_pct": 0.0,
+          "max_drawdown_pct": 0.0,
+          "trades": 0,
+          "policy_counts": {
+            "0": 5135,
+            "1": 0,
+            "2": 0
+          },
+          "safeguard_events": [],
+          "cash_roi_pct": 0.0,
+          "buy_hold_roi_pct": 32.6153,
+          "buy_hold_net_costs_roi_pct": 32.2179,
+          "buy_hold_net_costs_max_drawdown_pct": 17.045971635215228
+        },
+        "bear": {
+          "window": "bear",
+          "steps": 5087,
+          "horizon": "full",
+          "roi_pct": 0.0,
+          "max_drawdown_pct": 0.0,
+          "trades": 0,
+          "policy_counts": {
+            "0": 5087,
+            "1": 0,
+            "2": 0
+          },
+          "safeguard_events": [],
+          "cash_roi_pct": 0.0,
+          "buy_hold_roi_pct": -32.859,
+          "buy_hold_net_costs_roi_pct": -33.0601,
+          "buy_hold_net_costs_max_drawdown_pct": 43.43372064297786
+        }
+      },
+      "inspection": {
+        "bull": {
+          "mean_logits_cash_long_short": [
+            -0.04619999974966049,
+            -3.7058000564575195,
+            -3.88319993019104
+          ],
+          "mean_probs_cash_long_short": [
+            0.954833984375,
+            0.024581000208854675,
+            0.02058500051498413
+          ],
+          "max_long_prob": 0.025773,
+          "max_short_prob": 0.02155,
+          "min_cash_prob": 0.952677
+        },
+        "bear": {
+          "mean_logits_cash_long_short": [
+            -0.046300001442432404,
+            -3.704699993133545,
+            -3.882200002670288
+          ],
+          "mean_probs_cash_long_short": [
+            0.9547849893569946,
+            0.024607999250292778,
+            0.020607000216841698
+          ],
+          "max_long_prob": 0.025719,
+          "max_short_prob": 0.021524,
+          "min_cash_prob": 0.952757
+        }
+      }
+    },
+    "curriculum_warmup": {
+      "evaluation": {
+        "bull": {
+          "window": "bull",
+          "steps": 5135,
+          "horizon": "full",
+          "roi_pct": 0.0,
+          "max_drawdown_pct": 0.0,
+          "trades": 0,
+          "policy_counts": {
+            "0": 5135,
+            "1": 0,
+            "2": 0
+          },
+          "safeguard_events": [],
+          "cash_roi_pct": 0.0,
+          "buy_hold_roi_pct": 32.6153,
+          "buy_hold_net_costs_roi_pct": 32.2179,
+          "buy_hold_net_costs_max_drawdown_pct": 17.045971635215228
+        },
+        "bear": {
+          "window": "bear",
+          "steps": 5087,
+          "horizon": "full",
+          "roi_pct": 0.0,
+          "max_drawdown_pct": 0.0,
+          "trades": 0,
+          "policy_counts": {
+            "0": 5087,
+            "1": 0,
+            "2": 0
+          },
+          "safeguard_events": [],
+          "cash_roi_pct": 0.0,
+          "buy_hold_roi_pct": -32.859,
+          "buy_hold_net_costs_roi_pct": -33.0601,
+          "buy_hold_net_costs_max_drawdown_pct": 43.43372064297786
+        }
+      },
+      "inspection": {
+        "bull": {
+          "mean_logits_cash_long_short": [
+            -0.179299995303154,
+            -2.4105000495910645,
+            -2.598900079727173
+          ],
+          "mean_probs_cash_long_short": [
+            0.8358680009841919,
+            0.08977299928665161,
+            0.0743580013513565
+          ],
+          "max_long_prob": 0.095677,
+          "max_short_prob": 0.080324,
+          "min_cash_prob": 0.823999
+        },
+        "bear": {
+          "mean_logits_cash_long_short": [
+            -0.17949999868869781,
+            -2.4103000164031982,
+            -2.5969998836517334
+          ],
+          "mean_probs_cash_long_short": [
+            0.8356990218162537,
+            0.08979400247335434,
+            0.0745059996843338
+          ],
+          "max_long_prob": 0.094964,
+          "max_short_prob": 0.079898,
+          "min_cash_prob": 0.825137
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+Model,ROI (%),Max DD (%),Trades,Sharpe
+PPO (Transformer Policy),0.0,0.0,0,0.0
+DQN (Baseline),-8.04,13.92,34,-0.58
+A2C (Baseline),0.0,0.0,0,0.0
+Buy & Hold (Market),-24.94,52.86,1,-0.29

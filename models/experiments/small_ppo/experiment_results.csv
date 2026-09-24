@@ -1,0 +1,19 @@
+Period,Model,Seed,ROI %,B&H %,Sharpe,Sortino,Max DD %,Trades,Forced,Policy Cash,Policy Long,Policy Short
+Recent 2500 (~104 Days),Cash Baseline,N/A,0.0,2.137002023525101,0.0,0.0,0.0,0,0,2499,0,0
+Recent 2500 (~104 Days),Buy & Hold,N/A,2.137002023525101,2.137002023525101,0.39,0.56,-24.53,1,0,0,2499,0
+Recent 2500 (~104 Days),Preserved Transformer,Original,1.83,2.14,0.36,0.52,-24.21,1,0,0,2499,0
+Recent 2500 (~104 Days),Small MLP PPO (Seed 42),42,0.0,2.14,0.0,0.0,0.0,0,0,2499,0,0
+Recent 2500 (~104 Days),Small MLP PPO (Seed 101),101,-4.77,2.14,-1.39,-1.76,-7.47,22,0,2432,0,67
+Recent 2500 (~104 Days),Small MLP PPO (Seed 777),777,0.0,2.14,0.0,0.0,0.0,0,0,2499,0,0
+Bear Crash (2025-2026),Cash Baseline,N/A,0.0,-18.01165817616261,0.0,0.0,0.0,0,0,11688,0,0
+Bear Crash (2025-2026),Buy & Hold,N/A,-18.01165817616261,-18.01165817616261,-0.15,-0.22,-53.74,1,0,0,11688,0
+Bear Crash (2025-2026),Preserved Transformer,Original,-18.26,-18.01,-0.16,-0.22,-53.74,1,0,0,11688,0
+Bear Crash (2025-2026),Small MLP PPO (Seed 42),42,0.0,-18.01,0.0,0.0,0.0,0,0,11688,0,0
+Bear Crash (2025-2026),Small MLP PPO (Seed 101),101,-9.77,-18.01,-0.66,-0.91,-10.83,114,0,11280,0,408
+Bear Crash (2025-2026),Small MLP PPO (Seed 777),777,-8.57,-18.01,-0.88,-1.25,-10.52,19,0,11507,0,181
+ETF Bull (2023-2024),Cash Baseline,N/A,0.0,158.8718787361894,0.0,0.0,0.0,0,0,4368,0,0
+ETF Bull (2023-2024),Buy & Hold,N/A,158.8718787361894,158.8718787361894,4.16,6.13,-20.18,1,0,0,4368,0
+ETF Bull (2023-2024),Preserved Transformer,Original,158.1,158.87,4.15,6.11,-20.18,1,0,0,4368,0
+ETF Bull (2023-2024),Small MLP PPO (Seed 42),42,0.0,158.87,0.0,0.0,0.0,0,0,4368,0,0
+ETF Bull (2023-2024),Small MLP PPO (Seed 101),101,-11.75,158.87,-1.38,-2.05,-11.75,68,0,4089,0,279
+ETF Bull (2023-2024),Small MLP PPO (Seed 777),777,-5.59,158.87,-0.99,-1.33,-8.18,14,0,4257,0,111

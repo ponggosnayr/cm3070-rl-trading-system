@@ -1,0 +1,37 @@
+Period,Condition,Model,Seed,ROI %,B&H %,Sharpe,Sortino,Max DD %,Trades,Policy Cash,Policy Long,Policy Short
+Val Bull Window (2025),Baseline,Cash Baseline,N/A,0.0,32.615306995309176,0.0,0.0,0.0,0,5135,0,0
+Val Bull Window (2025),Baseline,Buy & Hold,N/A,32.615306995309176,32.615306995309176,1.47,2.13,-17.05,1,0,5135,0
+Val Bull Window (2025),Legacy Baseline,Preserved Transformer,Original,32.22,32.62,1.46,2.11,-17.05,1,0,5135,0
+Val Bull Window (2025),Condition A (Hard Cliff),Condition A (Seed 42),42,0.0,32.62,0.0,0.0,0.0,0,5135,0,0
+Val Bull Window (2025),Condition A (Hard Cliff),Condition A (Seed 101),101,-36.04,32.62,-5.17,-7.01,-38.09,258,4310,0,825
+Val Bull Window (2025),Condition A (Hard Cliff),Condition A (Seed 777),777,-10.52,32.62,-2.03,-2.16,-11.5,8,5114,0,21
+Val Bull Window (2025),Condition B (Gradual Single-Val),Condition B (Seed 42),42,0.25,32.62,0.12,0.16,-13.97,59,4434,416,285
+Val Bull Window (2025),Condition B (Gradual Single-Val),Condition B (Seed 101),101,-17.99,32.62,-2.26,-3.06,-19.23,79,4517,274,344
+Val Bull Window (2025),Condition B (Gradual Single-Val),Condition B (Seed 777),777,-27.17,32.62,-2.57,-3.38,-29.86,36,3691,0,1444
+Val Bull Window (2025),Condition C (Multi-Regime Val),Condition C (Seed 42),42,1.97,32.62,1.7,3.56,-0.85,2,5126,9,0
+Val Bull Window (2025),Condition C (Multi-Regime Val),Condition C (Seed 101),101,-2.01,32.62,-0.15,-0.21,-15.64,46,4176,0,959
+Val Bull Window (2025),Condition C (Multi-Regime Val),Condition C (Seed 777),777,0.0,32.62,0.0,0.0,0.0,0,5135,0,0
+Val Bear Window (2025-2026),Baseline,Cash Baseline,N/A,0.0,-32.85895716771539,0.0,0.0,0.0,0,5087,0,0
+Val Bear Window (2025-2026),Baseline,Buy & Hold,N/A,-32.85895716771539,-32.85895716771539,-1.27,-1.74,-43.43,1,0,5087,0
+Val Bear Window (2025-2026),Legacy Baseline,Preserved Transformer,Original,-33.06,-32.86,-1.28,-1.75,-43.43,1,0,5087,0
+Val Bear Window (2025-2026),Condition A (Hard Cliff),Condition A (Seed 42),42,0.0,-32.86,0.0,0.0,0.0,0,5087,0,0
+Val Bear Window (2025-2026),Condition A (Hard Cliff),Condition A (Seed 101),101,-20.07,-32.86,-2.15,-3.1,-22.12,224,4305,0,782
+Val Bear Window (2025-2026),Condition A (Hard Cliff),Condition A (Seed 777),777,-9.76,-32.86,-1.37,-1.88,-13.78,20,4849,0,238
+Val Bear Window (2025-2026),Condition B (Gradual Single-Val),Condition B (Seed 42),42,-17.84,-32.86,-1.08,-1.51,-23.42,92,3548,942,597
+Val Bear Window (2025-2026),Condition B (Gradual Single-Val),Condition B (Seed 101),101,-0.83,-32.86,0.02,0.03,-14.34,96,4192,203,692
+Val Bear Window (2025-2026),Condition B (Gradual Single-Val),Condition B (Seed 777),777,30.95,-32.86,1.96,3.06,-9.24,58,3235,0,1852
+Val Bear Window (2025-2026),Condition C (Multi-Regime Val),Condition C (Seed 42),42,-0.52,-32.86,-0.93,-1.13,-0.63,2,5080,7,0
+Val Bear Window (2025-2026),Condition C (Multi-Regime Val),Condition C (Seed 101),101,8.31,-32.86,0.96,1.4,-4.65,50,4406,0,681
+Val Bear Window (2025-2026),Condition C (Multi-Regime Val),Condition C (Seed 777),777,-10.79,-32.86,-3.0,-3.38,-11.85,12,5009,49,29
+Untouched Test Set (2026),Baseline,Cash Baseline,N/A,0.0,6.763213101441429,0.0,0.0,0.0,0,2368,0,0
+Untouched Test Set (2026),Baseline,Buy & Hold,N/A,6.763213101441429,6.763213101441429,0.79,1.16,-21.11,1,0,2368,0
+Untouched Test Set (2026),Legacy Baseline,Preserved Transformer,Original,6.44,6.76,0.76,1.12,-21.01,1,0,2368,0
+Untouched Test Set (2026),Condition A (Hard Cliff),Condition A (Seed 42),42,0.0,6.76,0.0,0.0,0.0,0,2368,0,0
+Untouched Test Set (2026),Condition A (Hard Cliff),Condition A (Seed 101),101,-13.58,6.76,-2.87,-3.76,-18.2,107,2017,0,351
+Untouched Test Set (2026),Condition A (Hard Cliff),Condition A (Seed 777),777,6.46,6.76,1.82,2.75,-4.22,11,2301,0,67
+Untouched Test Set (2026),Condition B (Gradual Single-Val),Condition B (Seed 42),42,16.02,6.76,2.53,3.45,-6.42,20,2057,131,180
+Untouched Test Set (2026),Condition B (Gradual Single-Val),Condition B (Seed 101),101,-6.76,6.76,-1.57,-2.24,-16.01,27,1976,70,322
+Untouched Test Set (2026),Condition B (Gradual Single-Val),Condition B (Seed 777),777,1.01,6.76,0.29,0.41,-9.76,21,1695,0,673
+Untouched Test Set (2026),Condition C (Multi-Regime Val),Condition C (Seed 42),42,0.0,6.76,0.0,0.0,0.0,0,2368,0,0
+Untouched Test Set (2026),Condition C (Multi-Regime Val),Condition C (Seed 101),101,-22.59,6.76,-4.26,-4.99,-27.19,22,1994,0,374
+Untouched Test Set (2026),Condition C (Multi-Regime Val),Condition C (Seed 777),777,0.0,6.76,0.0,0.0,0.0,0,2368,0,0
