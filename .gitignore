@@ -78,3 +78,26 @@ src/evaluate_comparison.py
 src/update_datasets.py
 src/test_env.py
 src/experiment_runner.py
+
+# Experimental tests
+tests/test_controlled_ppo_trial.py
+tests/test_ppo_learning_diagnostic.py
+tests/test_tiny_deep_evaluator.py
+tests/test_tiny_diagnostic.py
+
+# Redundant commodity datasets
+data/brent_*.csv
+data/cl=f_*.csv
+data/gc=f_*.csv
+data/gld_*.csv
+data/gold_*.csv
+data/natgas_*.csv
+data/ng=f_*.csv
+data/silver_*.csv
+data/wti_*.csv
+
+# Unused frontend tests and boilerplate assets
+frontend/src/*.test.mjs
+frontend/src/assets/hero.png
+frontend/src/assets/react.svg
+frontend/src/assets/vite.svg
