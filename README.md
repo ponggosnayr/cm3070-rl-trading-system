@@ -110,7 +110,7 @@ The web platform is organized into an institutional **Tri-Pane Interface** desig
 ## 🏗️ Project Architecture
 
 ```text
-FINAL PROJECT/
+cm3070-rl-trading-system/
 ├── api.py                   # FastAPI quantitative backend (PPO inference, backtesting, XAI)
 ├── verify_submission.py     # Automated 7-stage pre-submission verification audit
 ├── Verify_Submission.bat    # Windows one-click runner for submission verification audit
@@ -134,11 +134,9 @@ FINAL PROJECT/
 ├── models/                  # Saved policy checkpoints (.pth, .zip, .pkl normalizers)
 ├── docs/                    # Academic reports, rubric compliance matrix, and slides
 │   ├── RUBRIC_COMPLIANCE_MATRIX.md # Detailed LO1-LO6 & Template 4.2 audit mapping
-│   ├── DRAFT_FINAL_PROJECT_REPORT_V2.tex # LaTeX dissertation source (40 pages)
+│   ├── DRAFT_FINAL_PROJECT_REPORT_V2.tex # LaTeX report source
 │   └── HEURISTIC_EVALUATION_REPORT.md # Nielsen's 10-heuristic usability audit
-├── logs/                    # Logged performance reports of simulations
-├── tests/                   # Automated test suite
-└── scratch/                 # Development sandboxes and experimental scripts
+└── tests/                   # Automated test suite
 ```
 
 ### System Components
