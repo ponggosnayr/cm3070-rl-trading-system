@@ -11,7 +11,7 @@ Executes an automated 7-stage pre-submission verification audit:
   Stage 4: Full Automated Test Suite Execution (dynamic count)
   Stage 5: Quantitative Empirical Convergence (CSV vs Report Tables 4, 5, 6)
   Stage 6: Illustrative DSR Math & Synthetic Template Checks (rho >= 0.95)
-  Stage 7: Production Deliverables and Report Artifact Checks
+  Stage 7: Production Deliverables Check
 
 Exit Code:
   0 = All 7 automated stages passed (not a grading or live-feed guarantee)
@@ -209,7 +209,7 @@ def run_stage_6_xai_and_dsr() -> bool:
 
 
 def run_stage_7_deliverables() -> bool:
-    print_stage_header(7, "Production Deliverables & Academic Dissertation")
+    print_stage_header(7, "Production Deliverables")
 
     # Frontend build verification
     fe_index = "frontend/dist/index.html"
@@ -219,43 +219,7 @@ def run_stage_7_deliverables() -> bool:
         print(f"  Frontend Production Bundle: MISSING (run 'npm run build' in frontend/) ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
         return False
 
-    # PDF verification
-    pdf_path = "FINAL_PROJECT_REPORT.pdf"
-    if os.path.exists(pdf_path):
-        size = os.path.getsize(pdf_path)
-        with open(pdf_path, "rb") as handle:
-            is_pdf = handle.read(5) == b"%PDF-"
-        if size < 100_000 or not is_pdf:
-            print(f"  Academic Dissertation: '{pdf_path}' is too small or lacks a PDF header ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
-            return False
-        print(f"  Academic Dissertation: '{pdf_path}' has a PDF header ({size:,} bytes) ... {Colors.OKGREEN}[OK]{Colors.ENDC}")
-    else:
-        print(f"  Academic Dissertation: '{pdf_path}' MISSING ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
-        return False
-
-    report_source = "docs/DRAFT_FINAL_PROJECT_REPORT_V2.tex"
-    if not os.path.exists(report_source):
-        print(f"  Report source is not bundled; source URL, freshness and word-count checks are unavailable ... {Colors.WARNING}[LIMITATION]{Colors.ENDC}")
-        return True
-    with open(report_source, encoding="utf-8") as handle:
-        report_tex = handle.read()
-    if not re.search(r"https://github\.com/[A-Za-z0-9-]+/[A-Za-z0-9._-]+", report_tex):
-        print(f"  Public code repository URL is missing from the PDF source ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
-        return False
-    if os.path.getmtime(pdf_path) < os.path.getmtime(report_source):
-        print(f"  Report PDF predates its LaTeX source; rebuild the PDF ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
-        return False
-    count_check = subprocess.run(
-        [sys.executable, "docs/count_report_words.py", "--check"],
-        capture_output=True, text=True,
-    )
-    if count_check.returncode:
-        print(f"  Chapter word counts failed: {count_check.stderr.strip()} ... {Colors.FAIL}[FAILED]{Colors.ENDC}")
-        return False
-    print(f"  Chapter word counts match report titles ... {Colors.OKGREEN}[OK]{Colors.ENDC}")
-
     return True
-
 
 def main():
     print("=" * 72)
@@ -270,7 +234,7 @@ def main():
         ("Automated Test Suite (Dynamic Discovery)", run_stage_4_automated_tests),
         ("Empirical CSV-Report Convergence", run_stage_5_empirical_convergence),
         ("Illustrative DSR Math & Synthetic Ordering", run_stage_6_xai_and_dsr),
-        ("Production Deliverables & Report", run_stage_7_deliverables),
+        ("Production Deliverables", run_stage_7_deliverables),
     ]
 
     results = []

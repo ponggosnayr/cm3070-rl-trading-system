@@ -61,6 +61,5 @@ The committed `walk_forward_results.csv`, `comparison_results.csv` and `data/cro
 - models/: saved checkpoints and normalizers
 - data/: historical market data
 - tests/: automated tests
-- FINAL_PROJECT_REPORT.pdf: project dissertation report
 
 Results shown by the dashboard are research simulations, not investment advice.
