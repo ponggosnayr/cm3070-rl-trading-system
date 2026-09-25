@@ -155,7 +155,7 @@ def get_asset_csv_path(asset_label: str, timeframe: str) -> str:
     }
     return mapping.get(asset_label)
 
-def generate_5m_candles_from_1h(csv_path: str, target_close: Optional[float] = None):
+def generate_5m_candles_from_1h(csv_path: str):
     if not csv_path or not os.path.exists(csv_path):
         return []
     df = pd.read_csv(csv_path)
@@ -164,26 +164,16 @@ def generate_5m_candles_from_1h(csv_path: str, target_close: Optional[float] = N
     
     # Take the last 24 rows and forward fill/backward fill to prevent NaNs
     last_24h = df.iloc[-24:].reset_index(drop=True).ffill().bfill().copy()
-    
-    # Scale 24h price action proportionally to live price to avoid discontinuities
-    if target_close is not None and target_close > 0:
-        base_close = float(last_24h.iloc[-1]["close"])
-        if base_close > 0:
-            scale_ratio = target_close / base_close
-            last_24h["open"] = last_24h["open"] * scale_ratio
-            last_24h["high"] = last_24h["high"] * scale_ratio
-            last_24h["low"] = last_24h["low"] * scale_ratio
-            last_24h["close"] = last_24h["close"] * scale_ratio
+    source_times = pd.to_datetime(last_24h["datetime"], utc=True, errors="coerce")
+    if source_times.isna().any():
+        return []
     
     candles = []
     rng = np.random.default_rng(42)  # Local generator for reproducible Brownian bridge without mutating global state
-    # Align to current 5-minute interval floor boundary (300 seconds)
-    now_ts = (int(time.time()) // 300) * 300
-    total_candles = len(last_24h) * 12
-    c_idx = 0
     
     for idx in range(len(last_24h)):
         row = last_24h.iloc[idx]
+        hour_start = source_times.iloc[idx].timestamp()
         o_val = float(row["open"])
         h_val = float(row["high"])
         l_val = float(row["low"])
@@ -225,8 +215,8 @@ def generate_5m_candles_from_1h(csv_path: str, target_close: Optional[float] = N
             c_low = min(open_p, close_p)
             
             # Add small random wicks
-            wick_h = np.random.exponential(noise_std * 0.3)
-            wick_l = np.random.exponential(noise_std * 0.3)
+            wick_h = rng.exponential(noise_std * 0.3)
+            wick_l = rng.exponential(noise_std * 0.3)
             
             high_p = c_high + wick_h
             low_p = c_low - wick_l
@@ -239,8 +229,7 @@ def generate_5m_candles_from_1h(csv_path: str, target_close: Optional[float] = N
             high_p = max(high_p, open_p, close_p)
             low_p = min(low_p, open_p, close_p)
             
-            sec_offset = (total_candles - 1 - c_idx) * 300.0
-            candle_ts = now_ts - sec_offset
+            candle_ts = hour_start + (t - 1) * 300
             time_str = pd.to_datetime(candle_ts, unit="s", utc=True).strftime("%Y-%m-%d %H:%M UTC")
             timestamp_ms = int(candle_ts * 1000)
 
@@ -252,7 +241,6 @@ def generate_5m_candles_from_1h(csv_path: str, target_close: Optional[float] = N
                 "time": time_str,
                 "timestamp": timestamp_ms
             })
-            c_idx += 1
             
     return candles
 
@@ -561,13 +549,6 @@ def predict_for_latest_state(asset_label: str, timeframe: str):
                     meta = LIVE_PRICE_META.get(asset_label, {})
                     res["quote_is_live"] = bool(meta.get("is_live", False))
                     res["quote_time"] = meta.get("fetch_time_utc", res.get("quote_time", "Unavailable"))
-                    if res.get("candles") and len(res["candles"]) > 0:
-                        candles_copy = [dict(c) for c in res["candles"]]
-                        dec = 4 if cur_p < 10 else 2
-                        candles_copy[-1]["close"] = round(cur_p, dec)
-                        candles_copy[-1]["high"] = max(candles_copy[-1]["high"], candles_copy[-1]["close"])
-                        candles_copy[-1]["low"] = min(candles_copy[-1]["low"], candles_copy[-1]["close"])
-                        res["candles"] = candles_copy
                 return res
 
     csv_path = get_asset_csv_path(asset_label, timeframe)
@@ -669,9 +650,6 @@ def predict_for_latest_state(asset_label: str, timeframe: str):
     
     # Get history for sparkline (last 12 closes)
     history = [float(x) for x in df_indicators["close"].iloc[-12:].tolist()]
-    if quote_is_live and len(history) > 0 and history[-1] > 0:
-        scale_hist = current_price / history[-1]
-        history = [round(h * scale_hist, 2 if current_price > 10 else 4) for h in history]
     
     # Get current regime
     current_regime = float(df_indicators["market_regime"].iloc[-1])
@@ -690,20 +668,22 @@ def predict_for_latest_state(asset_label: str, timeframe: str):
     real_candles = fetch_real_5m_candles(asset_label)
     if real_candles and len(real_candles) > 0:
         candles = real_candles
-        candle_source = "live_exchange"
+        last_exchange_time = float(candles[-1]["timestamp"]) / 1000
+        candle_source = "live_exchange" if 0 <= time.time() - last_exchange_time <= 900 else "exchange_archive"
         is_synthetic = False
-        current_price = float(candles[-1]["close"])
+        if candle_source == "live_exchange":
+            current_price = float(candles[-1]["close"])
+            quote_is_live = True
+            quote_time = candles[-1]["time"]
+        elif not quote_is_live:
+            current_price = float(candles[-1]["close"])
+            quote_time = f"{candles[-1]['time']} (Exchange Archive)"
         history = [float(c["close"]) for c in candles[-24:]]
     else:
         csv_1h_path = get_asset_csv_path(asset_label, "1H")
-        candles = generate_5m_candles_from_1h(csv_1h_path, target_close=current_price)
+        candles = generate_5m_candles_from_1h(csv_1h_path)
         candle_source = "offline_historical_replay"
         is_synthetic = True
-        if candles and len(candles) > 0:
-            dec = 4 if current_price < 10 else 2
-            candles[-1]["close"] = round(current_price, dec)
-            candles[-1]["high"] = max(candles[-1]["high"], candles[-1]["close"])
-            candles[-1]["low"] = min(candles[-1]["low"], candles[-1]["close"])
     
     candle_is_live = bool(candle_source == "live_exchange")
     last_candle_time = candles[-1].get("time") if (candles and len(candles) > 0) else None
@@ -723,14 +703,15 @@ def predict_for_latest_state(asset_label: str, timeframe: str):
     # Ground market regime dynamically in authentic 24h candle swings
     high_24h = max(c["high"] for c in candles) if candles and len(candles) > 0 else current_price
     low_24h = min(c["low"] for c in candles) if candles and len(candles) > 0 else current_price
-    drop_from_high_pct = ((current_price - high_24h) / high_24h) * 100.0 if high_24h > 0 else 0.0
+    analysis_price = float(candles[-1]["close"]) if candles else current_price
+    drop_from_high_pct = ((analysis_price - high_24h) / high_24h) * 100.0 if high_24h > 0 else 0.0
 
     recent_change_pct = 0.0
     if candles and len(candles) >= 12:
         n_recent = min(36, len(candles))
         rec_open = candles[-n_recent]["open"]
         if rec_open > 0:
-            recent_change_pct = ((current_price - rec_open) / rec_open) * 100.0
+            recent_change_pct = ((analysis_price - rec_open) / rec_open) * 100.0
 
     if drop_from_high_pct <= -2.5 or recent_change_pct <= -1.8:
         regime_str = "Turbulent Pullback"
@@ -739,18 +720,20 @@ def predict_for_latest_state(asset_label: str, timeframe: str):
     elif change_pct_24h >= 0.8:
         regime_str = "Low Volatility Bull"
 
-    summary_text = generate_dynamic_summary(
-        asset_label,
-        current_price,
-        round(change_pct_24h, 2),
-        signal,
-        round(confidence, 1),
-        regime_str,
-        sentiment,
-        candles=candles
-    )
-
     model_eval_time = str(slice_df["datetime"].iloc[-1]) if "datetime" in slice_df.columns else datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    if candle_is_live:
+        summary_text = generate_dynamic_summary(
+            asset_label, analysis_price, round(change_pct_24h, 2), signal,
+            round(confidence, 1), regime_str, sentiment, candles=candles
+        )
+    else:
+        summary_text = (
+            f"Historical chart window ending {last_candle_time or model_eval_time}: "
+            f"{asset_label} changed {change_pct_24h:+.2f}% in that window. "
+            f"The model targets {signal} using archived input through {model_eval_time}; "
+            f"the historical market regime is {regime_str}. "
+            "Any current quote is separate from this historical chart and model input."
+        )
 
     res_obj = {
         "price": current_price,

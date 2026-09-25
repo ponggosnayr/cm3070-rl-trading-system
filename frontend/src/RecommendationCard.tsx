@@ -11,9 +11,9 @@ export default function RecommendationCard({ asset, onExplain }: Props) {
   const inferred = /BUY|LONG/.test(signal) ? 1 : /SELL|SHORT/.test(signal) ? 2 : /NEUTRAL|CASH|HOLD/.test(signal) ? 0 : -1;
   const action = asset.action !== undefined && [0, 1, 2].includes(asset.action) ? asset.action : inferred;
   const options = [
-    { label: 'Cash', title: 'Stay in Cash', description: 'The model favours keeping this allocation in cash rather than holding a long or short position.', icon: Minus, color: '#93b4ff' },
-    { label: 'Long', title: 'Buy / Hold', description: 'The model favours owning this asset: buy if you do not own it, or hold an existing position. Prices can still fall.', icon: ArrowUpRight, color: '#6ee7b7' },
-    { label: 'Short', title: 'Short', description: 'The model favours a position that benefits from falling prices. Shorting differs from selling an asset you own and loses value when prices rise.', icon: ArrowDownRight, color: '#fda4af' },
+    { label: 'Cash', title: 'Cash target', description: 'At the evaluation timestamp, the saved model targeted cash for this asset.', icon: Minus, color: '#93b4ff' },
+    { label: 'Long', title: 'Long target', description: 'At the evaluation timestamp, the saved model targeted a long position. This historical signal is not a current trade instruction.', icon: ArrowUpRight, color: '#6ee7b7' },
+    { label: 'Short', title: 'Short target', description: 'At the evaluation timestamp, the saved model targeted a short position. This historical signal is not a current trade instruction.', icon: ArrowDownRight, color: '#fda4af' },
   ];
   const target = options[action];
   const Icon = target?.icon ?? Minus;
@@ -21,9 +21,9 @@ export default function RecommendationCard({ asset, onExplain }: Props) {
   const valid = probs?.length === 3 && probs.every(p => Number.isFinite(p) && p >= 0 && p <= 1)
     && Math.abs(probs.reduce((a, b) => a + b, 0) - 1) < .02;
   return (
-    <section className="recommendation-card" aria-label="Model recommendation">
+    <section className="recommendation-card" aria-label="Saved model target">
       <div className="recommendation-main">
-        <div className="recommendation-eyebrow"><span className="recommendation-dot" /> AI SIGNAL</div>
+        <div className="recommendation-eyebrow"><span className="recommendation-dot" /> MODEL SNAPSHOT</div>
         <div className="recommendation-heading">
           <span className="recommendation-icon" style={{ color: target?.color }}><Icon size={25} /></span>
           <h3>{target?.title ?? 'Signal unavailable'}</h3>

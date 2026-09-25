@@ -45,6 +45,13 @@ Run the Python tests from the repository root:
 Check the frontend from the frontend directory:
 
     npm run build
+    npm run lint
+
+## Data and result provenance
+
+The bundled market CSVs are frozen snapshots for the local demo; they are not live quotes. When a live 5-minute feed is unavailable, the chart reconstructs illustrative 5-minute candles from archived hourly bars and labels them with the source dates. The SPY and QQQ daily files contain one midnight UTC candle per market date. Duplicate Yahoo daily timestamps at 04:00/05:00 UTC were removed in favour of the corresponding midnight rows; every retained row, including its OHLCV values and saved indicators, is unchanged.
+
+The committed `walk_forward_results.csv`, `comparison_results.csv` and `data/cross_market_results.csv` are retained historical outputs. They can be inspected, but their exact runs cannot be reproduced from this trimmed repository. In particular, the walk-forward CSV records fold boundaries for 57,756 BTC rows with no purge gap, while the bundled BTC hourly file now has 58,479 rows and `src/walk_forward_eval.py` defaults to a 24-row gap. Original run seeds, exact source snapshots and baseline/cross-market run manifests were not retained. The tests check saved-result consistency; they do not rerun those training experiments.
 
 ## Where to look
 
@@ -54,7 +61,6 @@ Check the frontend from the frontend directory:
 - models/: saved checkpoints and normalizers
 - data/: historical market data
 - tests/: automated tests
-
 - FINAL_PROJECT_REPORT.pdf: project dissertation report
 
 Results shown by the dashboard are research simulations, not investment advice.

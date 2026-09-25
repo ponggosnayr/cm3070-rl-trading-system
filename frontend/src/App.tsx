@@ -576,7 +576,7 @@ export function AreaLineChart({
           />
         )}
 
-        {/* Live Price Tag on Right Axis */}
+        {/* Price Tag on Right Axis */}
         {interactive && (
           <g>
             <rect
@@ -889,7 +889,7 @@ function CandlestickChart({
           />
         )}
 
-        {/* Live Price Tag on Right Axis */}
+        {/* Price Tag on Right Axis */}
         {interactive && (
           <g>
             <rect
@@ -1239,7 +1239,7 @@ export function MonteCarloConeChart({ mcData }: MonteCarloConeChartProps) {
 }
 
 function getPlainSignal(signal?: string): string {
-  return ({ Long: 'Buy / Hold', Short: 'Short', Cash: 'Stay in Cash' } as Record<string, string>)[targetLabel(signal)] ?? 'Unavailable';
+  return ({ Long: 'Long target', Short: 'Short target', Cash: 'Cash target' } as Record<string, string>)[targetLabel(signal)] ?? 'Unavailable';
 }
 
 
@@ -1518,9 +1518,6 @@ function App() {
     const target = asset || selectedAsset || (allAssets.length > 0 ? allAssets[0] : null);
     if (target) {
       setSelectedAsset(target);
-      fetchAnalytics(target.label);
-      if (!wfvData) fetchWalkForward();
-      selectMonteCarlo(target.label);
     }
     setActiveTab('deep_analytics');
     setCopilotCenterTab('deep_analytics');
@@ -1581,17 +1578,6 @@ function App() {
     sendChat(chatInput);
   };
 
-  const handleAssetClick = (asset: AssetData, targetTab?: 'analytics' | 'deep_analytics') => {
-    setSelectedAsset(asset);
-    const dest = targetTab || (activeTab === 'deep_analytics' ? 'deep_analytics' : 'analytics');
-    setActiveTab(dest);
-    setCopilotCenterTab(dest === 'deep_analytics' ? 'deep_analytics' : 'overview');
-    setViewMode('simple');
-    fetchAnalytics(asset.label);
-    if (!wfvData) fetchWalkForward();
-    selectMonteCarlo(asset.label);
-  };
-
   const getSparkColor = (signal: string) => {
     if (signal === 'BUY') return '#34D399';
     if (signal === 'SELL') return '#F87171';
@@ -1599,6 +1585,13 @@ function App() {
   };
 
   const allAssets = scoutData ? [...scoutData.Crypto, ...scoutData.ETFs] : [];
+  const feedAssets = selectedAsset ? [selectedAsset] : allAssets;
+  const liveQuoteCount = feedAssets.filter(asset => asset.quote_is_live === true).length;
+  const feedStatus = scoutConnectionLost ? 'Connection lost — last received data'
+    : liveQuoteCount === feedAssets.length && feedAssets.length > 0 ? 'LIVE (SYNCED)'
+    : liveQuoteCount > 0 ? `MIXED (${liveQuoteCount}/${feedAssets.length} LIVE)` : 'OFFLINE (CACHE / ARCHIVE)';
+  const feedStatusColor = scoutConnectionLost ? '#F87171'
+    : liveQuoteCount === feedAssets.length && feedAssets.length > 0 ? '#10B981' : '#F59E0B';
 
   const handleCopilotAssetSelect = (asset: AssetData) => {
     setSelectedAsset(asset);
@@ -1606,16 +1599,27 @@ function App() {
     if (copilotCenterTab === 'dashboard') {
       setCopilotCenterTab('overview');
     }
-    fetchAnalytics(asset.label);
-    if (!wfvData) fetchWalkForward();
-    selectMonteCarlo(asset.label);
   };
+
+  // Data requests follow the selected asset. Event handlers only update UI state.
+  useEffect(() => {
+    if (!selectedAsset) return;
+    const assetLabel = selectedAsset.label;
+    const timer = window.setTimeout(() => {
+      fetchAnalytics(assetLabel);
+      if (!wfvData) fetchWalkForward();
+      selectMonteCarlo(assetLabel);
+    }, 0);
+    // Requests are keyed by asset; cache and request IDs handle later refreshes.
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAsset?.label]);
 
   const handleDiveDeeperWithAI = () => {
     if (!selectedAsset) return;
     setIsCopilotCollapsed(false);
     sendChat(
-      `Briefly analyze ${selectedAsset.label}: explain the ${getPlainSignal(selectedAsset.signal)} signal, market phase context, and key risk factor in 2-3 sentences.`, 
+      `Briefly analyze ${selectedAsset.label}: explain the saved ${getPlainSignal(selectedAsset.signal)}, loaded market phase, data timestamps, and key risk factor in 2-3 sentences.`,
       selectedAsset, 
       `✨ Analyze ${selectedAsset.label}`
     );
@@ -1651,9 +1655,6 @@ function App() {
         const found = allAssetsRef.current.find(a => a.label.toLowerCase() === assetName.toLowerCase());
         if (found) {
           setSelectedAsset(found);
-          fetchAnalytics(found.label);
-          selectMonteCarlo(found.label);
-          if (!wfvData) fetchWalkForward();
         }
 
         if (isDeep) {
@@ -1681,7 +1682,6 @@ function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -1709,7 +1709,8 @@ function App() {
   }, [copilotCenterTab, selectedAsset, deepSubTab]);
 
   // ─── TRI-PANE COPILOT RENDERERS ───
-  const renderLeftRail = () => (
+  const renderLeftRail = () => {
+    return (
     <aside className="tripane-left-rail">
       {/* Crypto Watchlist */}
       <div>
@@ -1790,7 +1791,8 @@ function App() {
         </div>
       </div>
     </aside>
-  );
+    );
+  };
 
   const renderSynthesisCard = () => {
     const isDashboard = copilotCenterTab === 'dashboard';
@@ -1913,10 +1915,10 @@ function App() {
               <button className="copilot-action-pill" onClick={() => sendChat("Summarize the current market status, trends, and risk stance across all monitored assets in plain terms.", null, "📊 Market Summary")} style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#FFFFFF', borderColor: 'rgba(255, 255, 255, 0.2)' }}>
                 <Sparkles size={11} color="#34D399" /> Market Summary
               </button>
-              <button className="copilot-action-pill" onClick={() => sendChat("Compare the risk and stability between stock index ETFs (SPY, QQQ) and crypto (BTC, ETH, DOGE) right now.", null, "⚖️ Compare Assets")}>
+              <button className="copilot-action-pill" onClick={() => sendChat("Compare the risk and stability between stock index ETFs (SPY, QQQ) and crypto (BTC, ETH, DOGE) using the loaded data and its timestamps.", null, "⚖️ Compare Assets")}>
                 Compare Assets
               </button>
-              <button className="copilot-action-pill" onClick={() => sendChat("Which monitored asset currently displays the most promising trend or setup right now?", null, "🎯 Top Opportunities")}>
+              <button className="copilot-action-pill" onClick={() => sendChat("Which monitored asset has the strongest signal in the loaded data? Include the data timestamps and limitations.", null, "🎯 Top Opportunities")}>
                 Top Opportunities
               </button>
               <button className="copilot-action-pill" onClick={() => sendChat("Give me a brief overview of current market volatility and risk across all assets.", null, "🛡️ Risk Overview")}>
@@ -1928,7 +1930,7 @@ function App() {
               <button className="copilot-action-pill" onClick={() => handleDiveDeeperWithAI()} style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#FFFFFF', borderColor: 'rgba(255, 255, 255, 0.2)' }}>
                 <Sparkles size={11} color="#34D399" /> Deep Dive Analysis
               </button>
-              <button className="copilot-action-pill" onClick={() => sendChat(`Why is the AI suggesting ${getPlainSignal(selectedAsset.signal)} for ${selectedAsset.label}? Explain in plain terms.`, selectedAsset, `🎯 Why ${getPlainSignal(selectedAsset.signal)}?`)}>
+              <button className="copilot-action-pill" onClick={() => sendChat(`Why did the saved model snapshot target ${getPlainSignal(selectedAsset.signal)} for ${selectedAsset.label}? Include its evaluation timestamp and explain in plain terms.`, selectedAsset, `🎯 Why ${getPlainSignal(selectedAsset.signal)}?`)}>
                 Why this signal?
               </button>
               <button className="copilot-action-pill" onClick={() => sendChat(`Explain the key factors driving ${selectedAsset.label}'s price in plain language.`, selectedAsset, `🔍 Key Price Drivers`)}>
@@ -2011,7 +2013,11 @@ function App() {
                             <div
                               key={asset.label}
                               className={`glass-panel asset-card ${isSelected ? 'selected' : ''}`}
-                              onClick={() => handleAssetClick(asset)}
+                              onClick={() => {
+                                handleCopilotAssetSelect(asset);
+                                setActiveTab('analytics');
+                                setCopilotCenterTab('overview');
+                              }}
                               style={{ 
                                 cursor: 'pointer',
                                 border: isSelected ? '1px solid #FFFFFF' : '1px solid var(--glass-border)',
@@ -2038,7 +2044,7 @@ function App() {
                                   </span>
                                 </div>
                                 <div style={{ marginTop: '0.45rem' }}>
-                                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginRight: '0.4rem' }}>AI signal</span>
+                                    <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginRight: '0.4rem' }}>Model snapshot</span>
                                   <span className={`signal-badge signal-${asset.signal.toLowerCase()}`} style={{ padding: '0.18rem 0.6rem', fontSize: '0.72rem' }}>
                                     <SignalIcon signal={asset.signal} />&nbsp;{getPlainSignal(asset.signal)}
                                   </span>
@@ -2116,7 +2122,7 @@ function App() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span style={{ fontSize: '0.65rem', color: '#10B981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }}></span>
-                            ALL ONLINE
+                            APP ONLINE
                           </span>
                           <button
                             onClick={() => setIsTelemetryCollapsed(true)}
@@ -2156,7 +2162,7 @@ function App() {
                           </p>
                         </div>
 
-                        {/* Card 2: Live Market Feeds */}
+                        {/* Card 2: Market Data Feeds */}
                         <div style={{
                           padding: '0.45rem 0.6rem',
                           background: 'rgba(255, 255, 255, 0.02)',
@@ -2164,18 +2170,18 @@ function App() {
                           border: '1px solid rgba(255, 255, 255, 0.05)'
                         }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.15rem' }}>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Live Market Feeds</span>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Market Data Feeds</span>
                             <span style={{
                               fontSize: '0.65rem',
-                              color: scoutConnectionLost ? '#F87171' : ((selectedAsset ? selectedAsset.quote_is_live : (scoutData && [...(scoutData.Crypto || []), ...(scoutData.ETFs || [])].some(a => a.quote_is_live))) ? '#10B981' : '#F59E0B'),
+                              color: feedStatusColor,
                               fontWeight: 700
                             }}>
-                              {scoutConnectionLost ? 'Connection lost — last received data' : ((selectedAsset ? selectedAsset.quote_is_live : (scoutData && [...(scoutData.Crypto || []), ...(scoutData.ETFs || [])].some(a => a.quote_is_live))) ? 'LIVE (SYNCED)' : 'OFFLINE (CACHE)')}
+                              {feedStatus}
                             </span>
                           </div>
                           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#FFFFFF' }}>Binance + Yahoo Finance</div>
                           <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0', lineHeight: 1.3 }}>
-                            Real-time 5m candlestick feeds & GARCH volatility estimation.
+                            5m candles may be live, cached or historical; volatility estimates use loaded data.
                           </p>
                         </div>
 
@@ -2210,7 +2216,7 @@ function App() {
                 </div>
               </>
 
-  );
+    );
 
   const renderAnalyticsContent = () => (
               <>
@@ -2244,11 +2250,11 @@ function App() {
                                   boxShadow: selectedAsset.quote_is_live ? '0 0 6px rgba(52, 211, 153, 0.7)' : 'none',
                                   display: 'inline-block'
                                 }}></span>
-                                {selectedAsset.quote_is_live ? `Live Ticker (${selectedAsset.quote_time || 'Exchange'})` : `Cached Ticker (${selectedAsset.quote_time || 'Offline Archive'})`}
+                                {selectedAsset.quote_is_live ? `Live Quote (${selectedAsset.quote_time || 'Exchange'})` : `Cached / Archived Quote (${selectedAsset.quote_time || 'time unavailable'})`}
                               </span>
                               <span style={{ opacity: 0.4 }}>•</span>
                               <span>
-                                {selectedAsset.candle_is_live ? `5m Live Stream (${selectedAsset.last_candle_time || ''})` : `Historical Replay (${selectedAsset.last_candle_time || 'Cached OHLCV'})`}
+                                {selectedAsset.candle_is_live ? `Live 5m Candles (${selectedAsset.last_candle_time || ''})` : `${selectedAsset.candle_source === 'offline_historical_replay' ? 'Historical 5m Replay' : 'Cached / Archived 5m Candles'} (${selectedAsset.last_candle_time || 'time unavailable'})`}
                               </span>
                             </>
                           )}
@@ -2276,7 +2282,7 @@ function App() {
                         <button
                           onClick={() => {
                             setIsCopilotCollapsed(false);
-                            sendChat(`Analyze ${selectedAsset.label} for me. It is currently at $${selectedAsset.price.toLocaleString()} with a ${getPlainSignal(selectedAsset.signal)} signal. Market phase is ${getPlainRegime(selectedAsset.regime)}.`, selectedAsset, `✨ Analyze ${selectedAsset.label}`);
+                            sendChat(`Analyze ${selectedAsset.label} using the loaded price $${selectedAsset.price.toLocaleString()}, saved ${getPlainSignal(selectedAsset.signal)}, and loaded market phase ${getPlainRegime(selectedAsset.regime)}. Include the quote and model timestamps.`, selectedAsset, `✨ Analyze ${selectedAsset.label}`);
                           }}
                           style={{
                             background: 'rgba(255, 255, 255, 0.06)',
@@ -2307,13 +2313,13 @@ function App() {
                     <div style={{ marginTop: '1.25rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                          {selectedAsset.is_synthetic_candles ? (
+                          {!selectedAsset.quote_is_live || !selectedAsset.candle_is_live ? (
                             <span style={{ padding: '2px 7px', borderRadius: '4px', background: 'rgba(251, 191, 36, 0.12)', color: '#FBBF24', border: '1px solid rgba(251, 191, 36, 0.25)', fontWeight: 600 }}>
-                              Reconstructed Replay (Offline)
+                              {selectedAsset.is_synthetic_candles ? 'Reconstructed Replay (Offline)' : `${selectedAsset.quote_is_live ? 'Live quote' : 'Cached / archived quote'} · ${selectedAsset.candle_is_live ? 'live 5m candles' : 'offline / archived 5m candles'}`}
                             </span>
                           ) : (
                             <span style={{ padding: '2px 7px', borderRadius: '4px', background: 'rgba(52, 211, 153, 0.12)', color: '#34D399', border: '1px solid rgba(52, 211, 153, 0.25)', fontWeight: 600 }}>
-                              Live Exchange Feed
+                              Live Quote and 5m Candles
                             </span>
                           )}
                           {selectedAsset.quote_time && (
@@ -2545,14 +2551,14 @@ function App() {
                 alignItems: 'center',
                 gap: '0.4rem'
               }}>
-                <SignalIcon signal={selectedAsset.signal} /> Current Stance: {getPlainSignal(selectedAsset.signal)}
+                <SignalIcon signal={selectedAsset.signal} /> Model Snapshot Target: {getPlainSignal(selectedAsset.signal)}
               </span>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Conviction: <strong style={{ color: '#FFFFFF' }}>{(selectedAsset.confidence > 1 ? selectedAsset.confidence : selectedAsset.confidence * 100).toFixed(0)}%</strong>
+                Chosen-action probability: <strong style={{ color: '#FFFFFF' }}>{(selectedAsset.confidence > 1 ? selectedAsset.confidence : selectedAsset.confidence * 100).toFixed(0)}%</strong>
               </span>
             </div>
             <div style={{ fontSize: '0.78rem', color: '#34D399', background: 'rgba(52, 211, 153, 0.1)', padding: '0.2rem 0.6rem', borderRadius: '6px', fontWeight: 600 }}>
-              ⚡ Active Policy (Next-Candle Execution)
+              Saved policy snapshot (historical input)
             </div>
           </div>
 
@@ -2583,7 +2589,7 @@ function App() {
         {/* 2. THE THREE CORE DECISION CARDS */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
           
-          {/* Card A: What is the AI doing right now? */}
+          {/* Card A: saved model snapshot */}
           {(() => {
             const card1 = getCard1Details(selectedAsset.regime, selectedAsset.signal);
             return (
@@ -2591,10 +2597,10 @@ function App() {
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                     <Activity size={18} color="#60A5FA" />
-                    <h4 style={{ margin: 0, fontSize: '1rem', color: '#FFFFFF' }}>1. What is the AI Doing Right Now?</h4>
+                    <h4 style={{ margin: 0, fontSize: '1rem', color: '#FFFFFF' }}>1. What Did the Model Target?</h4>
                   </div>
                   <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '0.75rem', borderRadius: '8px', marginBottom: '0.75rem', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>LIVE MARKET ENVIRONMENT</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>LOADED MARKET REGIME</div>
                     <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#60A5FA', marginTop: '0.2rem' }}>
                       {card1.regimeDisplay}
                     </div>
@@ -2700,24 +2706,14 @@ function App() {
 
               let takeawayText: string;
               if (topCfg) {
-                if (isBullish) {
-                  takeawayText = `Model's BUY stance is led by ${topCfg.label} (${isTopPos ? '+' : '-'}${topPct}% relative weight), indicating directional upward buyer pressure.`;
-                } else if (isBearish) {
-                  takeawayText = `Model's defensive stance is triggered by adverse ${topCfg.label} (${isTopPos ? '+' : '-'}${topPct}% weight), prioritizing capital preservation over market exposure.`;
-                } else {
-                  takeawayText = `Model remains neutral as ${topCfg.label} (${isTopPos ? '+' : '-'}${topPct}% weight) reflects balanced market signals without clear breakout conviction.`;
-                }
+                takeawayText = `In this saved model snapshot, ${topCfg.label} had the largest displayed attribution (${isTopPos ? '+' : '-'}${topPct}% relative magnitude). This does not establish a current market trend.`;
               } else {
-                takeawayText = isBullish
-                  ? 'Model is responding to sustained buyer momentum, maintaining exposure while monitoring risk levels.'
-                  : isBearish
-                  ? 'Model has stepped aside into cash to protect capital against downside volatility.'
-                  : 'Model is observing market structure and waiting for confirmed directional volume.';
+                takeawayText = 'Computed feature drivers are not available for this model snapshot.';
               }
 
               return (
                 <div style={{ marginTop: '0.85rem', padding: '0.45rem 0.65rem', background: isBullish ? 'rgba(52, 211, 153, 0.08)' : isBearish ? 'rgba(248, 113, 113, 0.08)' : 'rgba(251, 191, 36, 0.08)', borderRadius: '6px', fontSize: '0.76rem', color: '#E4E4E7' }}>
-                  💡 <strong>Live Takeaway:</strong> {takeawayText}
+                  💡 <strong>Model Snapshot Takeaway:</strong> {takeawayText}
                 </div>
               );
             })()}
@@ -3189,7 +3185,7 @@ function App() {
                             <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#E4E4E7', marginTop: '0.2rem', whiteSpace: 'normal', lineHeight: 1.25 }}>
                               {getPlainRegime(selectedAsset.regime)}
                             </div>
-                            <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Live detected state</div>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>{selectedAsset.candle_is_live ? 'Detected from live 5m candles' : 'Detected from offline / archived data'}{selectedAsset.model_eval_time ? ` · evaluated ${selectedAsset.model_eval_time}` : ''}</div>
                           </div>
                         </div>
 
@@ -3666,7 +3662,7 @@ function App() {
                                 ))}
                               </div>
 
-                              {/* Live Model Synthesis Deep-Dive */}
+                              {/* Model Snapshot Synthesis Deep-Dive */}
                               <div style={{ background: 'rgba(0, 0, 0, 0.35)', borderRadius: '10px', padding: '1.25rem', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -3684,7 +3680,7 @@ function App() {
                                     : `For ${selectedAsset.label}, the policy targets Cash under the currently classified ${getPlainRegime(selectedAsset.regime).toLowerCase()} regime.`}
                                 </p>
                                 <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.85rem', fontStyle: 'italic', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.6rem' }}>
-                                  * Latent market states are identified in real time via an unsupervised Gaussian Hidden Markov Model (HMM) fitted over rolling return variance and volume distributions (Hamilton, 1989; Rabiner, 1989).
+                                  * The regime is a model classification based on the loaded return and volume history (Hamilton, 1989; Rabiner, 1989).
                                 </div>
                               </div>
                             </div>

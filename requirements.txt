@@ -1,11 +1,12 @@
 # Core RL & Quantitative Trading Dependencies
 stable-baselines3==2.8.0
+sb3-contrib==2.8.0
 gymnasium==1.2.3
 pandas==3.0.2
 numpy==1.26.4
 plotly==6.7.0
 requests==2.33.1
-torch>=2.2.0  # Installed: torch==2.7.0+cu128 (CUDA 12.8 compatible)
+torch>=2.2.0
 tqdm==4.67.3
 pytest==9.0.3
 shap==0.45.0
