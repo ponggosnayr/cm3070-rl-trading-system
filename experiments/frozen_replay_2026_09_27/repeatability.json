@@ -1,0 +1,12 @@
+{
+  "results.csv": {
+    "run1_sha256": "1fa714c28a4c5981b2820fdfb178931695d26f49fe289191043f570b7d70c11e",
+    "run2_sha256": "1fa714c28a4c5981b2820fdfb178931695d26f49fe289191043f570b7d70c11e",
+    "identical": true
+  },
+  "policy_trace.csv": {
+    "run1_sha256": "7a61d8aad384b2fb65e92ee366fb9fc24443a6f56649af8b82f14ac2f557f8b3",
+    "run2_sha256": "7a61d8aad384b2fb65e92ee366fb9fc24443a6f56649af8b82f14ac2f557f8b3",
+    "identical": true
+  }
+}

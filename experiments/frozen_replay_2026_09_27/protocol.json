@@ -1,0 +1,53 @@
+{
+  "source_commit": "dbf9a0d525e9141c67052ed8f1aeb8928a62a779",
+  "scope": "Supplementary retrospective replay, not unseen holdout evaluation or recreation of historical tables.",
+  "selection": "Final 2160 rows, divided into three consecutive 720-row windows; fixed before policy inference.",
+  "input_sha256": {
+    "src/rl_env.py": "19d378a96c759d126ecd872f2505ba706e505dd0c89fc439523316671a190d69",
+    "src/trading_utils.py": "b5ad667d4f21a96711a372085c66ecd7b088b9ae964d2c9f667fc2e67d3ff122",
+    "models/persistent_brain.pth": "37debdd4b71b5194446a1c1d908a12fef1947beeec788ba1300836a26370da76",
+    "models/persistent_brain_normalizer.pkl": "6120d78807b09229550e954569a83047553af482c9dfa7510a13a71cd91e00e6",
+    "models/hmm_regime.pkl": "fcab4a9392b400d398b6b871a7a5cf88a54ebb60d88823666d749d39717dd594",
+    "data/btc_usdt_1h.csv": "3c5e68c09c8e08005588ebd1b6882d1f8a841c4bf788be86619863c9a1fa6a90"
+  },
+  "windows": [
+    {
+      "name": "W1",
+      "start": 56319,
+      "end": 57039,
+      "start_datetime": "2026-06-09 17:00:00",
+      "end_datetime": "2026-07-09 16:00:00"
+    },
+    {
+      "name": "W2",
+      "start": 57039,
+      "end": 57759,
+      "start_datetime": "2026-07-09 17:00:00",
+      "end_datetime": "2026-08-08 16:00:00"
+    },
+    {
+      "name": "W3",
+      "start": 57759,
+      "end": 58479,
+      "start_datetime": "2026-08-08 17:00:00",
+      "end_datetime": "2026-09-07 16:00:00"
+    }
+  ],
+  "environment": {
+    "initial_balance": 10000.0,
+    "commission_rate": 0.001,
+    "slippage_rate": 0.0005,
+    "random_start": false,
+    "max_steps": 720,
+    "max_trade_duration": 48,
+    "cooldown_steps": 1,
+    "max_drawdown_cap": 1.0
+  },
+  "preprocessing": "Recompute indicators over the complete frozen OHLCV prefix using the saved HMM; reset environment context and eight-frame stack at each window. No fitting.",
+  "baseline": "Cash at zero return; Buy-and-Hold enters next open and exits final close with identical fees/slippage, without the PPO holding-duration rule.",
+  "inference": "CPU, one thread, seed 42, eval mode, deterministic masked argmax, frozen observation normalizer.",
+  "limitations": [
+    "Checkpoint and HMM training exposure to these dates is not established.",
+    "Single checkpoint, one asset, short windows; no seed uncertainty or generalisation claim."
+  ]
+}

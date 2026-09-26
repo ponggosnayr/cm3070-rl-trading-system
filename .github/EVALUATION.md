@@ -26,6 +26,10 @@ The exact saved runs **cannot be reproduced from this trimmed repository**:
 
 The current evaluation implementation fits HMM/preprocessing within each training fold and evaluates using frozen fold parameters. That describes the current code; it does not retroactively establish the settings of the saved experiments.
 
+## Supplementary frozen-policy replay
+
+The [27 September 2026 replay](../experiments/frozen_replay_2026_09_27/README.md) retains fixed windows, exact input hashes, runtime versions, a runnable harness and two identical sets of metrics/traces. The saved demo policy chose Long throughout all three windows and underperformed cost-adjusted Buy-and-Hold in each. This is a repeatability check with disclosed holding-rule differences and unknown training exposure, not an unseen test or a reproduction of the historical results above.
+
 ## Market data and the dashboard
 
 Bundled market CSVs are frozen snapshots for the local demo, not live quotes. Some dashboard paths attempt to obtain current prices or candles from external services, so network availability affects what can be shown.

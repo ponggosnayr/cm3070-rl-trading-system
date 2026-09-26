@@ -1,0 +1,25 @@
+{
+  "protocol_sha256": "f014977028f10bb9c976d1739a2298a4f7a5188c8831f823deabaa2154b4a094",
+  "runner_sha256": "ced5125a5fea0e2c97effeab4a5022c1a54eb37f9c62dd66ee94fdb52d867b13",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "device": "cpu",
+  "threads": 1,
+  "seed": 42,
+  "normalizer_frozen": true,
+  "normalise_reward": false,
+  "input_unchanged": true,
+  "baseline_analytic_check": "passed within one cent in all windows",
+  "packages": {
+    "torch": "2.14.0",
+    "stable-baselines3": "2.9.0",
+    "gymnasium": "1.2.3",
+    "numpy": "1.26.4",
+    "pandas": "3.0.2",
+    "hmmlearn": "0.3.3",
+    "scikit-learn": "1.8.0"
+  },
+  "output_sha256": {
+    "results.csv": "1fa714c28a4c5981b2820fdfb178931695d26f49fe289191043f570b7d70c11e",
+    "policy_trace.csv": "7a61d8aad384b2fb65e92ee366fb9fc24443a6f56649af8b82f14ac2f557f8b3"
+  }
+}
