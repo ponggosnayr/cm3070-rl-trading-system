@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title desc">
+  <title id="title">Adaptive RL Trading Dashboard</title>
+  <desc id="desc">Research workflow from historical market data to PPO and Transformer decisions, followed by explanations, backtests and risk analysis.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101b2e"/><stop offset="1" stop-color="#18334a"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#69c8d3" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="1200" height="330" rx="16" fill="url(#bg)"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="45" y="47" fill="#76d6de" font-size="13" letter-spacing="2">MACHINE LEARNING / FULL-STACK ENGINEERING</text>
+    <text x="45" y="94" fill="#ffffff" font-size="34" font-weight="700">Understand the decision. Explore the risk.</text>
+    <text x="45" y="126" fill="#bacbd8" font-size="17">A research workspace for model signals, market context and historical evaluation.</text>
+    <g fill="#16283c" stroke="#3b5267">
+      <rect x="45" y="162" width="320" height="107" rx="10"/>
+      <rect x="439" y="162" width="320" height="107" rx="10"/>
+      <rect x="833" y="162" width="320" height="107" rx="10"/>
+    </g>
+    <g fill="#ffffff" font-size="21" font-weight="700">
+      <text x="66" y="198">Market context</text>
+      <text x="460" y="198">Temporal policy</text>
+      <text x="854" y="198">Inspect and evaluate</text>
+    </g>
+    <g fill="#bacbd8" font-size="16">
+      <text x="66" y="226">Historical OHLCV + indicators</text>
+      <text x="66" y="249">Five-state HMM regimes</text>
+      <text x="460" y="226">PPO + PyTorch Transformer</text>
+      <text x="460" y="249">Cash / long / short targets</text>
+      <text x="854" y="226">SHAP + historical backtests</text>
+      <text x="854" y="249">Monte Carlo risk scenarios</text>
+    </g>
+    <g stroke="#69c8d3" stroke-width="2" marker-end="url(#arrow)"><path d="M382 216 H418"/><path d="M777 216 H812"/></g>
+    <text x="45" y="304" fill="#91aaba" font-size="13">CM3070 FINAL-YEAR PROJECT</text>
+    <text x="1154" y="304" fill="#91aaba" font-size="13" text-anchor="end">Research prototype · No live order execution</text>
+  </g>
+</svg>

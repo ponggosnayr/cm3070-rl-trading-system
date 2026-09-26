@@ -1,65 +1,124 @@
-# CM3070 Trading System
+# Adaptive RL Trading Dashboard
 
-Source code for a local research dashboard that displays saved reinforcement learning trading signals, historical backtests, risk simulations and explanations. It does not place real trades.
+**Explore how a reinforcement learning policy responds to changing markets.**
 
-## Requirements
+A full-stack research application combining a Transformer-based PPO policy, historical backtesting, market-regime detection, SHAP explanations and Monte Carlo risk analysis.
 
-- Python 3.12
-- Node.js 20.19+ or 22.12+, with npm
+Built by **Ryan Pong Rui An** for the **CM3070 Computer Science final-year project, University of London**.
 
-## Install
+![Project workflow: historical market data feeds a PPO and Transformer policy, followed by explanations, backtests and risk analysis.](.github/assets/project-overview.svg)
 
-From a terminal:
+[Get started](#get-started) · [Explore the demo](#explore-the-demo) · [Architecture](.github/ARCHITECTURE.md) · [Evaluation](.github/EVALUATION.md) · [Developer guide](.github/DEVELOPMENT.md)
 
-    git clone https://github.com/ponggosnayr/cm3070-rl-trading-system.git
-    cd cm3070-rl-trading-system
-    python -m venv env
+> **Research prototype:** the dashboard analyses signals and simulated trades. It does not connect to a broker or execute real orders. Bundled data and saved results are historical; they are not evidence of future trading performance.
 
-Activate the environment (env\Scripts\activate on Windows, or source env/bin/activate on macOS/Linux), then install the backend and frontend dependencies:
+## What it does
 
-    python -m pip install -r requirements.txt
-    cd frontend
-    npm ci
+The project brings model behaviour, market context and risk into one interface, so a trading signal can be inspected alongside the evidence behind it.
 
-The repository includes the saved model and sample market data needed for the local demo. A Gemini API key is optional; the advisor has a deterministic fallback when it is unavailable.
+| Area | What you can explore |
+| --- | --- |
+| **Market dashboard** | Asset charts, model signals and market-regime context for BTC, ETH, DOGE, SPY and QQQ. |
+| **Strategy Lab** | Historical backtests, equity curves, returns, drawdowns and trade activity. |
+| **Explainability** | SHAP feature attributions for model action scores, alongside an optional Gemini-powered advisor. |
+| **Risk simulations** | Monte Carlo price perturbations and sudden-crash scenarios with aggregate downside metrics. |
+| **Model School** | Saved walk-forward and baseline results for inspecting model strengths and failure cases. |
 
-## Run the app
+## Engineering highlights
 
-Open two terminals from the repository root. With the Python environment active, start the backend in one:
+- **Custom trading environment:** Gymnasium environment with three target positions (cash, long and short), transaction costs, slippage and configurable drawdown safeguards.
+- **Temporal policy:** Stable-Baselines3 PPO with a custom PyTorch Transformer; the deep extractor uses four encoder layers, eight attention heads and eight stacked observations.
+- **Market context:** a five-state Gaussian Hidden Markov Model supplements technical indicators and portfolio-state features.
+- **Evaluation tooling:** walk-forward training with configurable train/test gaps, training-partition HMM fitting, baseline comparisons and risk metrics.
+- **Full-stack delivery:** FastAPI endpoints, a React/TypeScript dashboard, saved checkpoints, sample datasets and automated tests.
 
-    python api.py
+Read the [architecture guide](.github/ARCHITECTURE.md) for component responsibilities, action semantics and source-code entry points.
 
-Start the frontend in the other:
+## Get started
 
-    cd frontend
-    npm run dev
+### Requirements
 
-Open http://localhost:5173. On Windows, Launch_Dashboard.bat is an alternative after installation.
+- **Python 3.12**
+- **Node.js 20.19+ or 22.12+**, with npm
+- Git
 
-## Check the code
+The local demo includes a saved policy and sample data. **Retraining and a Gemini API key are optional.** The backend selects CUDA when available and otherwise uses the CPU.
 
-Run the Python tests from the repository root:
+### 1. Clone and create the Python environment
 
-    python -m pytest tests/
+```bash
+git clone https://github.com/ponggosnayr/cm3070-rl-trading-system.git
+cd cm3070-rl-trading-system
+python -m venv env
+```
 
-Check the frontend from the frontend directory:
+Activate the environment for your shell:
 
-    npm run build
-    npm run lint
+| Shell | Command |
+| --- | --- |
+| Windows PowerShell | `.\env\Scripts\Activate.ps1` |
+| Windows Command Prompt | `env\Scripts\activate.bat` |
+| macOS / Linux | `source env/bin/activate` |
 
-## Data and result provenance
+### 2. Install dependencies
 
-The bundled market CSVs are frozen snapshots for the local demo; they are not live quotes. When a live 5-minute feed is unavailable, the chart reconstructs illustrative 5-minute candles from archived hourly bars and labels them with the source dates. The SPY and QQQ daily files contain one midnight UTC candle per market date. Duplicate Yahoo daily timestamps at 04:00/05:00 UTC were removed in favour of the corresponding midnight rows; every retained row, including its OHLCV values and saved indicators, is unchanged.
+```bash
+python -m pip install -r requirements.txt
+cd frontend
+npm ci
+cd ..
+```
 
-The committed `walk_forward_results.csv`, `comparison_results.csv` and `data/cross_market_results.csv` are retained historical outputs. They can be inspected, but their exact runs cannot be reproduced from this trimmed repository. In particular, the walk-forward CSV records fold boundaries for 57,756 BTC rows with no purge gap, while the bundled BTC hourly file now has 58,479 rows and `src/walk_forward_eval.py` defaults to a 24-row gap. Original run seeds, exact source snapshots and baseline/cross-market run manifests were not retained. The tests check saved-result consistency; they do not rerun those training experiments.
+### 3. Start both servers
 
-## Where to look
+In one terminal, from the repository root with the Python environment activated:
 
-- api.py: FastAPI backend and model inference
-- frontend/: React dashboard
-- src/: trading environment, training, backtesting and explanations
-- models/: saved checkpoints and normalizers
-- data/: historical market data
-- tests/: automated tests
+```bash
+python api.py
+```
 
-Results shown by the dashboard are research simulations, not investment advice.
+In a second terminal, from the repository root:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open **[localhost:5173](http://localhost:5173)**. Interactive API documentation is available at **[localhost:8000/docs](http://localhost:8000/docs)** while the backend is running. Use `Ctrl+C` in each terminal to stop the servers.
+
+On Windows, `Launch_Dashboard.bat` is an alternative after installing the dependencies. Keep its console open while using the app.
+
+For optional Gemini configuration, troubleshooting and test commands, see the [developer guide](.github/DEVELOPMENT.md).
+
+## Explore the demo
+
+1. **Start with the market dashboard.** Select an asset and timeframe; check the displayed data dates and source before interpreting its signal.
+2. **Open Strategy Lab.** Inspect the backtest equity curve, drawdown and number of trades together. A flat curve can mean the policy stayed in cash.
+3. **Inspect the explanation.** Use SHAP to see which inputs influenced the action scores. The advisor adds a conversational view; it has a deterministic fallback without a Gemini key.
+4. **Stress-test the strategy.** Compare normal Monte Carlo perturbations with sudden-crash scenarios.
+5. **Visit Model School.** Review saved walk-forward folds and baseline comparisons to understand where the model succeeds or fails.
+
+## Repository guide
+
+| Path | Purpose |
+| --- | --- |
+| [`api.py`](api.py) | Model loading, inference, HTTP endpoints and advisor integration. |
+| [`frontend/src/`](frontend/src/) | React dashboard, charts, recommendation cards and market summaries. |
+| [`src/rl_env.py`](src/rl_env.py) | Trading environment and custom Transformer feature extractors. |
+| [`src/train_agent.py`](src/train_agent.py) | PPO training and checkpoint management. |
+| [`src/walk_forward_eval.py`](src/walk_forward_eval.py) | Sequential out-of-sample evaluation. |
+| [`src/trading_utils.py`](src/trading_utils.py) | Indicators, HMM regimes, backtests and trading metrics. |
+| [`src/xai_shap.py`](src/xai_shap.py), [`src/xai_engine.py`](src/xai_engine.py) | Feature attributions and explanation logic. |
+| [`src/mc_engine.py`](src/mc_engine.py) | Perturbed-price and crash-scenario simulations. |
+| [`models/`](models/) / [`data/`](data/) | Saved checkpoints, normalisers, market snapshots and historical results. |
+| [`tests/`](tests/) | Environment, numerical, API, data and explanation tests. |
+
+## Reading the results responsibly
+
+The saved experiments show **mixed performance**, including folds with no trades and weak transfer to some markets. Exact historical runs cannot be reproduced from this trimmed repository because the original seeds, input snapshots and complete run manifests were not retained.
+
+Current evaluation code and bundled data also differ from some saved runs. The [evaluation notes](.github/EVALUATION.md) explain these differences, link the original result files and separate software checks from performance evidence.
+
+## Questions and feedback
+
+For a bug report or project question, [open an issue](https://github.com/ponggosnayr/cm3070-rl-trading-system/issues). Include the relevant command, Python/Node versions and error message, with API keys removed.
